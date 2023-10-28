@@ -10,9 +10,7 @@
 * Размер поля Hight 
 */
 
-
 int print_field(int ball_i, int ball_j, int right_rocket, int left_rocket);
-
 
 int main(){
     char who, left, right;
@@ -29,12 +27,61 @@ int main(){
             ball_i = 13;
             ball_j = 69;
             nap_gor = -1;
-        } 
-        
+        }
+        print_field(ball_i, ball_j, right_rocket, left_rocket);
+        printf("%d : %d\n", left_score, right_score);
+        if (who == 'l'){
+                while (left != 'a' && left != 'z' && left != ' '){
+                    left = getchar();                
+                    if (left == 'a'){
+                        left_rocket --;
+                        nap_ver = -1;
+                    }else if (left == 'z')
+                    {
+                        left_rocket ++;
+                        nap_ver = 1;
+                    }
+                }
+                while (right != 'm' && right != 'k' && right != ' '){
+                    right = getchar();
+                    if (right == 'k'){
+                        right_rocket--;
+                        nap_ver = -1;
+                    }else if (right == 'm')
+                    {
+                        right_rocket ++;
+                        nap_ver = 1;
+                    }
+                }
+                nap_gor = 1;
+            }
+            if (who == 'r'){
+                while (right != 'k' && right != 'm' && right != ' '){
+                    right = getchar();
+                    if (right == 'k'){
+                        right_rocket --;
+                        nap_ver = -1;
+                    }else if (right == 'm')
+                    {
+                        right_rocket ++;
+                    }
+                }
+                while (left != 'a' && left != 'z' && left != ' '){
+                    left = getchar();
+                    if (left == 'a'){
+                        left_rocket --;
+                        nap_ver = -1;
+                    }else if (left == 'z')
+                    {
+                        left_rocket ++;
+                        nap_ver = 1;
+                    }
+                }
+                nap_gor = -1;                          
+            }
         
         while (flag == 1){
-            print_field(ball_i, ball_j, right_rocket, left_rocket);
-            printf("%d : %d\n", left_score, right_score);
+            
             if ((ball_j == 11) && (nap_gor == -1)){
                 if (ball_i == left_rocket || ball_i == left_rocket +1 || ball_i == left_rocket + 2){
                     nap_gor *= -1;
@@ -56,51 +103,42 @@ int main(){
                 }
             }
             if (who == 'l'){
-                while (left != 'a' && left != 'z' && left != ' '){
-                    scanf("%c", &left);
-                
-                    if (left == 'a'){
-                        nap_ver = -1;
+                while (left != 'a' && left != 'z' && left != ' ' && left != '\n'){
+                    left = getchar();                
+                    if (left == 'a' && left_rocket != 1){
                         left_rocket --;
-                    }else if (left == 'z')
+                    }else if (left == 'z' && left_rocket != 23)
                     {
-                        nap_ver = 1;
                         left_rocket ++;
                     }
                 }
-                while (right != 'm' && right != 'k' && right != ' '){
-                    scanf("%c", &right);
-                    if (right == 'k'){
-                        nap_ver = -1;
+                while (right != 'm' && right != 'k' && right != ' ' && right != '\n'){
+                    right = getchar();
+                    if (right == 'k' && right_rocket != 1){
                         right_rocket--;
-                    }else if (right == 'm')
+                    }else if (right == 'm' && right_rocket != 23)
                     {
-                        nap_ver = 1;
                         right_rocket ++;
                     }
                 }
                 nap_gor = 1;
             }
             if (who == 'r'){
-                while (right != 'k' && right != 'm' && right != ' '){
-                    scanf("%c", &right);
-                    if (right == 'k'){
-                        nap_ver = -1;
+                while (right != 'k' && right != 'm' && right != ' ' && right != '\n'){
+                    right = getchar();
+                    if (right == 'k' && right_rocket != 1){
                         right_rocket --;
-                    }else if (right == 'm')
+                    }else if (right == 'm' && right_rocket != 23)
                     {
-                        nap_ver = 1;
                         right_rocket --;
                     }
                 }
-                while (left != 'a' && left != 'z' && left != ' '){
-                    scanf("%c", &left);
-                    if (left == 'a'){
-                        nap_ver = -1;
+                while (left != 'a' && left != 'z' && left != ' ' && left != '\n'){
+                    left = getchar();
+                    if (left == 'a' && left_rocket != 1){
                         left_rocket --;
-                    }else if (left == 'z')
+                    }else if (left == 'z' && left_rocket != 23)
                     {
-                        nap_ver = 1;
                         left_rocket ++;
                     }
                 }
@@ -135,10 +173,10 @@ int print_field(int ball_i, int ball_j, int right_rocket, int left_rocket){
             else if (i == ball_i && j == ball_j){
                 printf("*");
             }
-            else if ((i == left_rocket || i == left_rocket + 1 || i == left_rocket + 2 || i == right_rocket || i == right_rocket + 1 || i == right_rocket + 2) && (j == 10 || j == 70)){
+            else if ((((i == left_rocket || i == left_rocket + 1 || i == left_rocket + 2 ) && (j == 10)) || ((i == right_rocket || i == right_rocket + 1 || i == right_rocket + 2)) && (j == 70))){
                 printf("|");
             } 
-            else if ( j == 40 ) {
+            else if (j == 39) {
                 printf(":");
             } else {
                 printf(" ");
