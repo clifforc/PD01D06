@@ -11,38 +11,78 @@
 5. Кто начинает who
 6. Управление left, right
 * Размер поля Hight
+
+struct timeval timeout;
+        fd_set readfds;
+        FD_ZERO(&readfds);
+        FD_SET(STDIN_FILENO, &readfds);
+        timeout.tv_sec = 0;
+        timeout.tv_usec = 100000;
+
+        int key_is_pressed = select(STDIN_FILENO + 1, &readfds, NULL, NULL,
+&timeout); if (key_is_pressed != 0) { if (FD_ISSET(STDIN_FILENO, &readfds)) {
+                char input;
+                read(STDIN_FILENO, &input, 1);
+                if (input == 'a' && first_player_y > 3) {
+                    first_player_y--;
+                } else if (input == 'z' && first_player_y < Y - 2) {
+                    first_player_y++;
+                } else if (input == 'k' && second_player_y > 3) {
+                    second_player_y--;
+                } else if (input == 'm' && second_player_y < Y - 2) {
+                    second_player_y++;
+                }
+            }
 */
 int print_field(int ball_i, int ball_j, int right_rocket, int left_rocket);
-int left_insert(char left);
-int right_insert(char right);
-int move_rocket(int rocket, int move);
-int ball_gor();
 
 int main() {
-  char who;
-  int flag, left_rocket, right_rocket, left_score = 0, right_score = 0, nap_ver,
-                                       nap_gor, ball_i, ball_j;
+  char who = '*';
+  int left_score = 0, right_score = 0, nap_ver, nap_gor, ball_i, ball_j;
 
-  struct termios term;
-  tcgetattr(STDIN_FILENO, &term);
-  term.c_lflag &= ~(ICANON | ECHO);
-  tcsetattr(STDIN_FILENO, 0, &term);
+  struct termios origTerm, newTerm;
+  tcgetattr(STDIN_FILENO, &origTerm);
+  newTerm = origTerm;
+  newTerm.c_lflag &= ~(ICANON | ECHO);
+  tcsetattr(STDIN_FILENO, TCSANOW, &newTerm);
   printf("Who starts?(l/r) ");
   while (who != 'l' && who != 'r') {
     who = getchar();
   }
-  while (left_score < 3 && right_score < 3) {
+  while (left_score < 21 && right_score < 21) {
     if (who == 'l') {
       ball_i = 13, ball_j = 11, nap_gor = 1, nap_ver = -1;
     } else if (who == 'r') {
       ball_i = 13, ball_j = 69, nap_gor = -1, nap_ver = -1;
     }
-    flag = 1, left_rocket = 12, right_rocket = 12;
+    int flag = 1, left_rocket = 12, right_rocket = 12;
     print_field(ball_i, ball_j, right_rocket, left_rocket);
-    printf("%d : %d\n", left_score, right_score);
+    printf("                                     %d : %d\n", left_score, right_score);
     while (flag == 1) {
-      left_rocket = move_rocket(left_rocket, left_insert('*'));
-      right_rocket = move_rocket(right_rocket, right_insert('*'));
+      struct timeval timeout;
+      fd_set readfds;
+      FD_ZERO(&readfds);
+      FD_SET(STDIN_FILENO, &readfds);
+      timeout.tv_sec = 0;
+      timeout.tv_usec = 80000;
+
+      int key_is_pressed =
+          select(STDIN_FILENO + 1, &readfds, NULL, NULL, &timeout);
+      if (key_is_pressed != 0) {
+        if (FD_ISSET(STDIN_FILENO, &readfds)) {
+          char input;
+          read(STDIN_FILENO, &input, 1);
+          if (input == 'a' && left_rocket > 1) {
+            left_rocket--;
+          } else if (input == 'z' && left_rocket < 23) {
+            left_rocket++;
+          } else if (input == 'k' && right_rocket > 1) {
+            right_rocket--;
+          } else if (input == 'm' && right_rocket < 23) {
+            right_rocket++;
+          }
+        }
+      }
       if (ball_i == 1 || ball_i == 25) {
         nap_ver *= -1;
       }
@@ -66,13 +106,13 @@ int main() {
       }
       ball_j += nap_gor;
       print_field(ball_i, ball_j, right_rocket, left_rocket);
-      printf("%d : %d\n", left_score, right_score);
+      printf("                                     %d : %d\n", left_score, right_score);
     }
   }
   if (right_score > left_score) {
-    printf("Congrats to right player!!!");
+    printf("                    Congrats to right player!!!");
   } else if (right_score < left_score) {
-    printf("Congrats to left player!!!");
+    printf("                    Congrats to left player!!!");
   }
 }
 
@@ -99,54 +139,4 @@ int print_field(int ball_i, int ball_j, int right_rocket, int left_rocket) {
     printf("\n");
   }
   return 0;
-}
-
-int left_insert(char left) {
-  while (left != 'a' && left != 'z' && left != ' ') {
-    left = getchar();
-    if (left == 'a') {
-      return -1;
-    } else if (left == 'z') {
-      return 1;
-    } else if (left == ' ') {
-      return 0;
-    }
-  }
-  return 'l';
-}
-
-int right_insert(char right) {
-  while (right != 'k' && right != 'm' && right != ' ') {
-    right = getchar();
-    if (right == 'k') {
-      return -1;
-    } else if (right == 'm') {
-      return 1;
-    } else if (right == ' ') {
-      return 0;
-    }
-  }
-  return 'r';
-}
-int move_rocket(int rocket, int move) {
-  rocket += move;
-  if (rocket == 0 || rocket == 24) {
-    rocket -= move;
-    return rocket;
-  } else {
-    return rocket;
-  }
-}
-int ball_ver(int ball_i, int nap_ver) {
-  ball_i += nap_ver;
-  if (ball_i == 0 || ball_i == 26) {
-    ball_i -= nap_ver;
-    return ball_i;
-  } else {
-    return ball_i;
-  }
-}
-int ball_gor(int ball_j, int nap_gor) {
-  ball_j += nap_gor;
-  return ball_j;
 }
