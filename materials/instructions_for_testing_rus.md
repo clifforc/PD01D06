@@ -17,3 +17,4 @@
   Необходимая версия clang-format: \
   **Mac** 14.0.5 \
   **Linux** 13.0.1
+cppcheck --enable=all --suppress=missingIncludeSystem src/soursefile_name.c

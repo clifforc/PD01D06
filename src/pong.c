@@ -23,7 +23,7 @@ int main() {
   while (who != 'l' && who != 'r') {
     who = getchar();
   }
-  while (left_score < 3 && right_score < 3) {
+  while (left_score < 21 && right_score < 21) {
     if (who == 'l') {
       ball_i = 13, ball_j = 11, nap_gor = 1, nap_ver = -1;
     } else if (who == 'r') {
