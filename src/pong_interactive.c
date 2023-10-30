@@ -11,28 +11,6 @@
 5. Кто начинает who
 6. Управление left, right
 * Размер поля Hight
-
-struct timeval timeout;
-        fd_set readfds;
-        FD_ZERO(&readfds);
-        FD_SET(STDIN_FILENO, &readfds);
-        timeout.tv_sec = 0;
-        timeout.tv_usec = 100000;
-
-        int key_is_pressed = select(STDIN_FILENO + 1, &readfds, NULL, NULL,
-&timeout); if (key_is_pressed != 0) { if (FD_ISSET(STDIN_FILENO, &readfds)) {
-                char input;
-                read(STDIN_FILENO, &input, 1);
-                if (input == 'a' && first_player_y > 3) {
-                    first_player_y--;
-                } else if (input == 'z' && first_player_y < Y - 2) {
-                    first_player_y++;
-                } else if (input == 'k' && second_player_y > 3) {
-                    second_player_y--;
-                } else if (input == 'm' && second_player_y < Y - 2) {
-                    second_player_y++;
-                }
-            }
 */
 int print_field(int ball_i, int ball_j, int right_rocket, int left_rocket);
 
